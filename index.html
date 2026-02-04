@@ -3,39 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Upload Player</title>
+    <title>Smart Heartbeat Player - Nana Saki</title>
     <style>
-        :root { --neon: #00f2ff; --bg: #050505; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        :root { --neon: #00f2ff; --bg: #050505; --red: #ff4444; }
+        body { 
+            margin: 0; background: var(--bg); color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; overflow: hidden; 
+        }
         
-        /* ១. មីនុយលាក់ជិត */
-        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; font-size: 24px; cursor: pointer; color: var(--neon); opacity: 0.5; }
-        .menu-btn:hover { opacity: 1; }
+        /* Menu Settings - រក្សាដូចដើមបេះបិទ */
+        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 3000; font-size: 28px; cursor: pointer; color: var(--neon); background: rgba(0,0,0,0.5); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 10px; border: 1px solid var(--neon); }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 4000; }
+        .modal-content { background: #111; padding: 20px; border-radius: 20px; width: 320px; border: 1px solid var(--neon); text-align: center; }
         
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: #111; padding: 25px; border-radius: 20px; width: 300px; border: 1px solid var(--neon); text-align: center; }
-        
-        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; outline: none; }
-        
-        /* រចនាប៊ូតុង Upload ឱ្យស្អាត */
-        .file-label { display: block; padding: 10px; margin-bottom: 15px; border: 1px dashed var(--neon); border-radius: 8px; cursor: pointer; color: var(--neon); font-size: 13px; }
+        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #333; background: #000; color: white; outline: none; box-sizing: border-box; }
+        .file-label { display: block; padding: 10px; margin-bottom: 10px; border: 1px dashed var(--neon); border-radius: 8px; cursor: pointer; color: var(--neon); font-size: 13px; }
         #fileInput { display: none; }
+        
+        .btn-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        .btn-apply { flex: 2; padding: 12px; background: var(--neon); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; }
+        .btn-delete { flex: 1; padding: 12px; background: var(--red); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #fff; display: flex; justify-content: center; align-items: center; }
+        
+        .yt-container { width: 100%; height: 150px; background: #000; border-radius: 10px; overflow: hidden; margin: 10px 0; border: 1px solid #222; }
 
-        .btn-apply { width: 100%; padding: 12px; background: var(--neon); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; }
+        /* ភ្លើង RGB រត់ជុំវិញរាងចតុកោណកែង */
+        .rgb-frame {
+            position: relative;
+            padding: 4px;
+            background: linear-gradient(45deg, #ff0000, #ff00f2, #00f2ff, #00ffaa, #ff0000);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            animation: rgbMove 5s linear infinite;
+        }
 
-        /* ២. ប្រអប់ Player */
-        .player-card { width: 240px; padding: 25px; background: rgba(255, 255, 255, 0.02); border-radius: 35px; border: 3px solid var(--neon); text-align: center; box-shadow: 0 0 20px var(--neon); transition: all 0.2s; }
-        #coverArt { width: 180px; height: 180px; border-radius: 20px; margin: 0 auto 15px; background-size: cover; background-position: center; background-image: url('https://via.placeholder.com/200?text=Upload+Image'); border: 1px solid rgba(255, 255, 255, 0.1); }
+        @keyframes rgbMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .player-box {
+            background: #000; padding: 30px 20px; border-radius: 22px; 
+            display: flex; flex-direction: column; align-items: center; width: 300px;
+        }
+
+        /* កន្លែងចង្វាក់បេះដូងរង្វង់ */
+        .player-wrapper { position: relative; width: 250px; height: 250px; display: flex; justify-content: center; align-items: center; }
+        #ecg-canvas { position: absolute; width: 100%; height: 100%; z-index: 5; }
+        #coverArt { width: 130px; height: 130px; border-radius: 50%; background-size: cover; background-position: center; background-image: url('https://via.placeholder.com/300?text=LOGO'); border: 4px solid rgba(255, 255, 255, 0.1); z-index: 10; position: absolute; }
         
-        .visualizer { display: flex; justify-content: center; align-items: flex-end; height: 25px; gap: 4px; margin-bottom: 15px; }
-        .bar { width: 5px; background: var(--neon); border-radius: 3px; height: 4px; transition: height 0.15s, background 0.3s; }
-        
-        .song-title { font-size: 13px; color: var(--neon); font-weight: bold; margin-bottom: 12px; letter-spacing: 1px; }
-        input[type="range"] { width: 100%; accent-color: var(--neon); cursor: pointer; }
-        .time-box { display: flex; justify-content: space-between; font-size: 10px; color: #555; margin-top: 5px; }
-        
-        .yt-hide { width: 100%; height: 60px; overflow: hidden; margin-top: 15px; border-radius: 10px; border: 1px solid #333; }
-        #yt-player { margin-top: -65px; }
+        .controls-ui { width: 100%; text-align: center; margin-top: 15px; }
+        .song-title { font-size: 11px; color: var(--neon); font-weight: bold; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase; }
+        input[type="range"] { width: 100%; accent-color: var(--neon); cursor: pointer; height: 6px; border-radius: 5px; }
+        .time-display { display: flex; justify-content: space-between; font-size: 11px; color: #777; margin-top: 8px; font-family: monospace; }
+
+        .footer-credit { position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 3px; font-weight: bold; text-transform: uppercase; }
+        .footer-credit span { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
     </style>
 </head>
 <body>
@@ -44,115 +68,156 @@
 
     <div class="modal" id="modal">
         <div class="modal-content">
-            <h4 style="margin-top:0; color:var(--neon)">SETTINGS</h4>
-            
-            <input type="text" id="ytUrl" placeholder="ផាស Link YouTube នៅទីនេះ...">
-            
-            <label class="file-label" for="fileInput" id="fileLabel">📁 ចុចទីនេះដើម្បី Upload រូបភាព</label>
+            <h4 style="margin-top:0; color:var(--neon)">HEARTBEAT SETTINGS</h4>
+            <div class="yt-container" id="yt-player"></div>
+            <input type="text" id="ytUrl" placeholder="ផាស Link YouTube...">
+            <label class="file-label" for="fileInput">📁 ប្តូររូបភាព Cover</label>
             <input type="file" id="fileInput" accept="image/*">
             
-            <button class="btn-apply" onclick="updateP()">APPLY & PLAY</button>
-            <div class="yt-hide"><div id="yt-player"></div></div>
-            <button onclick="closeM()" style="background:none; border:none; color:#444; cursor:pointer; margin-top:10px;">បិទវិញ</button>
+            <div class="btn-group">
+                <button class="btn-apply" onclick="updateP()">START</button>
+                <button class="btn-delete" onclick="clearData()">🗑️</button>
+            </div>
+            <button onclick="closeM()" style="background:none; border:none; color:#555; cursor:pointer;">បិទវិញ</button>
         </div>
     </div>
 
-    <div class="player-card" id="mainCard">
-        <div id="coverArt"></div>
-        <div class="visualizer" id="viz">
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="rgb-frame">
+        <div class="player-box">
+            <div class="player-wrapper">
+                <canvas id="ecg-canvas"></canvas>
+                <div id="coverArt"></div>
+            </div>
+            <div class="controls-ui">
+                <div class="song-title" id="songLabel">Nana Saki Player</div>
+                <input type="range" id="seek" value="0" min="0" step="1" onchange="seekVideo(this.value)">
+                <div class="time-display">
+                    <span id="curr">0:00</span>
+                    <span id="total">0:00</span>
+                </div>
+            </div>
         </div>
-        <div class="song-title" id="songLabel">STREAMING PLAYER</div>
-        <input type="range" id="seek" value="0">
-        <div class="time-box"><span id="curr">0:00</span><span id="total">0:00</span></div>
     </div>
+
+    <div class="footer-credit">Developed by <span>Nana Saki</span></div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player, timer, vizInt;
-        let colors = ['#00f2ff', '#00ffaa', '#ff00ea', '#ffff00', '#ff4d00', '#7a00ff'];
-        let uploadedImg = null;
+        let player, timer, vizInt, angle = 0;
+        const canvas = document.getElementById('ecg-canvas');
+        const ctx = canvas.getContext('2d');
 
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', { events: { 'onStateChange': onState } });
+            const savedUrl = localStorage.getItem('savedUrl');
+            const initialId = savedUrl ? extractID(savedUrl) : 'dQw4w9WgXcQ';
+            
+            player = new YT.Player('yt-player', {
+                height: '100%',
+                width: '100%',
+                videoId: initialId,
+                events: { 
+                    'onReady': onPlayerReady,
+                    'onStateChange': onState 
+                }
+            });
+            loadSaved();
         }
 
-        // មុខងារអានឯកសាររូបភាពដែលបាន Upload
-        document.getElementById('fileInput').onchange = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    uploadedImg = event.target.result;
-                    document.getElementById('fileLabel').innerText = "✅ រូបភាពត្រូវបានជ្រើសរើស";
-                    document.getElementById('fileLabel').style.borderColor = "#00ffaa";
-                };
-                reader.readAsDataURL(file);
+        function onPlayerReady(event) {
+            // បើមានវីដេអូស្រាប់ ឱ្យវាលោតនាទី និងចង្វាក់បេះដូង
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                startTimer(); startDrawing();
             }
-        };
+        }
 
         function openM() { document.getElementById('modal').style.display = 'flex'; }
         function closeM() { document.getElementById('modal').style.display = 'none'; }
+        function seekVideo(v) { if (player && player.getDuration) player.seekTo(v, true); }
+        function clearData() { if(confirm("លុបទិន្នន័យ?")) { localStorage.clear(); location.reload(); } }
 
         function updateP() {
-            const id = extractID(document.getElementById('ytUrl').value);
-            const cover = document.getElementById('coverArt');
-
+            const url = document.getElementById('ytUrl').value;
+            const id = extractID(url);
             if (id) {
-                // បើមានការ Upload រូប វានឹងប្រើរូប Upload បើអត់ទេ វានឹងទាញរូបពី YouTube
-                cover.style.backgroundImage = uploadedImg ? `url('${uploadedImg}')` : `url('https://img.youtube.com/vi/${id}/maxresdefault.jpg')`;
+                localStorage.setItem('savedUrl', url);
                 player.loadVideoById(id);
-                document.getElementById('songLabel').innerText = "SYNCING AUDIO...";
+                closeM();
             }
         }
 
-        function onState(e) {
-            if (e.data == 1) { 
-                startTimer(); startViz(); 
-                setTimeout(closeM, 3000); 
-            } else { 
-                clearInterval(timer); stopViz(); 
+        function onState(e) { 
+            if (e.data == YT.PlayerState.PLAYING) { 
+                startTimer(); startDrawing(); 
+            } else if (e.data == YT.PlayerState.PAUSED || e.data == YT.PlayerState.ENDED) {
+                stopDrawing(); 
             }
         }
 
-        function startViz() {
-            const bars = document.querySelectorAll('.bar');
-            const card = document.getElementById('mainCard');
+        function startDrawing() {
+            if(vizInt) clearInterval(vizInt);
+            canvas.width = 250; canvas.height = 250;
             vizInt = setInterval(() => {
-                let color = colors[Math.floor(Math.random() * colors.length)];
-                card.style.borderColor = color;
-                card.style.boxShadow = `0 0 25px ${color}`;
-                bars.forEach(b => {
-                    b.style.height = (Math.random() * 20 + 5) + 'px';
-                    b.style.background = color;
-                });
-            }, 250);
+                let bass = Math.random() * 35 + 5;
+                ctx.clearRect(0, 0, 250, 250);
+                ctx.beginPath();
+                ctx.lineWidth = 2.5; 
+                ctx.strokeStyle = "#00f2ff";
+                ctx.shadowBlur = 10; 
+                ctx.shadowColor = "#00f2ff";
+
+                // គូសចង្វាក់បេះដូងជារង្វង់
+                for (let i = 0; i < 360; i++) {
+                    let rad = (i * Math.PI) / 180;
+                    let pulse = ((i + angle) % 120 < 15) ? Math.sin(i * 10) * (bass > 28 ? 18 : 8) : Math.random() * 4;
+                    let r = 85 + pulse;
+                    let x = 125 + r * Math.cos(rad);
+                    let y = 125 + r * Math.sin(rad);
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.closePath(); 
+                ctx.stroke();
+                angle += 2;
+            }, 60);
         }
 
-        function stopViz() {
-            clearInterval(vizInt);
-            const def = '#00f2ff';
-            document.querySelectorAll('.bar').forEach(b => { b.style.height = '4px'; b.style.background = def; });
-            document.getElementById('mainCard').style.borderColor = def;
-        }
+        function stopDrawing() { clearInterval(vizInt); }
 
         function startTimer() {
+            if(timer) clearInterval(timer);
             timer = setInterval(() => {
-                const c = player.getCurrentTime(), d = player.getDuration();
-                document.getElementById('curr').innerText = format(c);
-                document.getElementById('total').innerText = format(d);
-                document.getElementById('seek').value = (c / d) * 100;
+                if (player && player.getCurrentTime) {
+                    const c = player.getCurrentTime(), d = player.getDuration();
+                    document.getElementById('curr').innerText = format(c);
+                    document.getElementById('total').innerText = format(d);
+                    const seek = document.getElementById('seek');
+                    seek.max = d; seek.value = c;
+                }
             }, 1000);
         }
 
-        document.getElementById('seek').oninput = function() { player.seekTo((this.value / 100) * player.getDuration()); };
-        function format(s) { let m = Math.floor(s/60), sec = Math.floor(s%60); return m + ":" + (sec < 10 ? '0' + sec : sec); }
+        function format(s) { if(!s) return "0:00"; let m = Math.floor(s/60), sec = Math.floor(s%60); return m + ":" + (sec < 10 ? '0' + sec : sec); }
+        
         function extractID(url) {
             const reg = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(reg);
             return (match && match[2].length === 11) ? match[2] : null;
         }
+
+        function loadSaved() {
+            const savedUrl = localStorage.getItem('savedUrl');
+            if(savedUrl) document.getElementById('ytUrl').value = savedUrl;
+            const savedImg = localStorage.getItem('savedImg');
+            if(savedImg) document.getElementById('coverArt').style.backgroundImage = `url(${savedImg})`;
+        }
+
+        document.getElementById('fileInput').onchange = function(e) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                localStorage.setItem('savedImg', ev.target.result);
+                document.getElementById('coverArt').style.backgroundImage = `url(${ev.target.result})`;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
     </script>
 </body>
 </html>
